@@ -10,3 +10,10 @@ render-cli.zip
 render.exe
 .abacus.donotdelete
 .project_instructions.md
+nextjs_space/.admin-token.local.txt
+env-full.json
+env-patch.json
+patch-service.json
+env-try.json
+render-openapi.json
+openapi2.json
