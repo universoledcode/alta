@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: alta-dashboard
+    runtime: node
+    rootDir: nextjs_space
+    plan: starter
+    region: oregon
+    buildCommand: corepack yarn install && corepack yarn prisma generate && corepack yarn build
+    startCommand: corepack yarn start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: AWS_PROFILE
+        sync: false
+      - key: AWS_REGION
+        sync: false
+      - key: AWS_BUCKET_NAME
+        sync: false
+      - key: AWS_FOLDER_PREFIX
+        sync: false
+      - key: ADMIN_API_TOKEN
+        sync: false
+      - key: ALLOW_DATA_RESET
+        value: "false"

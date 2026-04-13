@@ -1,0 +1,55 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model UploadBatch {
+  id        String   @id @default(cuid())
+  fileName  String
+  platform  String
+  records   Int      @default(0)
+  createdAt DateTime @default(now())
+  orders    Order[]
+
+  @@index([createdAt])
+  @@index([platform])
+}
+
+model Order {
+  id              String    @id @default(cuid())
+  guideNumber     String
+  platform        String
+  status          String
+  originalStatus  String
+  orderDate       DateTime?
+  customerName    String?
+  phone           String?
+  city            String?
+  department      String?
+  carrier         String?
+  totalAmount     Float     @default(0)
+  profit          Float     @default(0)
+  shippingCost    Float     @default(0)
+  product         String?
+  quantity        Int       @default(1)
+  sku             String?
+  seller          String?
+  store           String?
+  shipmentType    String?
+  vigencia        String?
+  createdAt       DateTime  @default(now())
+  uploadBatchId   String?
+  uploadBatch     UploadBatch? @relation(fields: [uploadBatchId], references: [id])
+
+  @@unique([guideNumber, platform])
+  @@index([platform])
+  @@index([status])
+  @@index([orderDate])
+  @@index([carrier])
+  @@index([city])
+}
