@@ -1,6 +1,13 @@
 # Monorepo: la app Next vive en nextjs_space/
 # En Netlify UI: conecta el repo https://github.com/universoledcode/alta
-# No hace falta tocar "base directory" si usas este archivo.
+#
+# IMPORTANTE (si el build falla con P1012 DATABASE_URL):
+# - Site settings → Environment variables → crea DATABASE_URL (misma cadena que en tu .env local).
+# - El contexto debe incluir "Builds" (Netlify: disponible en builds y en runtime).
+#
+# IMPORTANTE (plugin Next.js):
+# - En Build settings, deja "Publish directory" VACIO. Si pones "nextjs_space" ahi, rompe el deploy.
+#   El plugin @netlify/plugin-nextjs define la salida correcta.
 
 [build]
   base = "nextjs_space"

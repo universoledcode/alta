@@ -12,11 +12,25 @@ Dashboard para consolidar cargas de pedidos (Dropi y Effi), calcular KPIs operat
 
 El repositorio tiene `netlify.toml` en la raíz con `base = "nextjs_space"` y el plugin oficial `@netlify/plugin-nextjs`.
 
+### Antes del primer deploy (obligatorio)
+
+1. En Netlify: **Site configuration** (o al crear el sitio) → **Environment variables** → **Add a variable**.
+2. Crea **`DATABASE_URL`** con el mismo valor que usas en tu PC en `nextjs_space/.env` (cadena `postgresql://...` completa).
+3. En la variable, activa los contextos que apliquen: como mínimo **"Same value for all deploy contexts"** o marca **Production** y **Deploy Previews** y **Branch deploys**, y asegurate de que Netlify la use en **builds** (en la UI suele llamarse *Scopes*: incluye build + runtime).
+
+Sin `DATABASE_URL`, Prisma falla en el build con **P1012** (exactamente el error que viste).
+
+### Ajustes en la UI de Netlify (muy importante)
+
+- **Base directory**: dejalo vacio en la UI si ya usas `netlify.toml` (el archivo ya pone `base = "nextjs_space"`).
+- **Publish directory**: **dejalo vacio**. No pongas `nextjs_space` ahi: con `@netlify/plugin-nextjs` la publicacion la resuelve el plugin. Si lo llenaste, edita el sitio → **Build & deploy** → **Configure** → borra "Publish directory" → guarda.
+
+### Pasos del sitio
+
 1. Cuenta en [Netlify](https://www.netlify.com/) → **Add new site** → **Import an existing project**.
 2. Conecta GitHub y elige el repo `universoledcode/alta`.
-3. Netlify leerá `netlify.toml`: **no cambies** el directorio base manualmente salvo que sepas lo que haces.
-4. En **Site settings → Environment variables**, agrega las mismas claves que en `.env.example` (como mínimo `DATABASE_URL`, `ADMIN_API_TOKEN`, `ALLOW_DATA_RESET`; y AWS si los usas).
-5. **Deploy site**.
+3. Agrega variables de entorno (al menos `DATABASE_URL`; luego `ADMIN_API_TOKEN`, `ALLOW_DATA_RESET`, AWS si aplica).
+4. **Deploy site** o **Trigger deploy**.
 
 Build en Netlify ejecuta: `yarn install`, `prisma generate`, `prisma db push` (crea tablas) y `next build`.
 
