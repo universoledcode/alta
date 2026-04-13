@@ -1,13 +1,18 @@
 const path = require('path');
 
+const isNetlify = process.env.NETLIFY === 'true';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   distDir: process.env.NEXT_DIST_DIR || '.next',
   output: process.env.NEXT_OUTPUT_MODE,
   productionBrowserSourceMaps: false,
-  experimental: {
-    outputFileTracingRoot: path.join(__dirname, '../'),
-  },
+  // Raíz del monorepo: útil en algunos hosts; en Netlify puede confundir el tracing.
+  ...(!isNetlify && {
+    experimental: {
+      outputFileTracingRoot: path.join(__dirname, '../'),
+    },
+  }),
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -16,7 +21,7 @@ const nextConfig = {
   },
   images: { unoptimized: true },
   webpack: (config, { isServer }) => {
-    if (!isServer) {
+    if (!isNetlify && !isServer) {
       config.output.filename = 'static/chunks/[name]-[contenthash:8].js';
       config.output.chunkFilename = 'static/chunks/[contenthash:16].js';
     }

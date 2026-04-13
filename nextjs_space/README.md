@@ -8,6 +8,20 @@ Dashboard para consolidar cargas de pedidos (Dropi y Effi), calcular KPIs operat
 - Prisma + PostgreSQL
 - Recharts + Tailwind CSS
 
+## Deploy en Netlify (recomendado si Render falla)
+
+El repositorio tiene `netlify.toml` en la raíz con `base = "nextjs_space"` y el plugin oficial `@netlify/plugin-nextjs`.
+
+1. Cuenta en [Netlify](https://www.netlify.com/) → **Add new site** → **Import an existing project**.
+2. Conecta GitHub y elige el repo `universoledcode/alta`.
+3. Netlify leerá `netlify.toml`: **no cambies** el directorio base manualmente salvo que sepas lo que haces.
+4. En **Site settings → Environment variables**, agrega las mismas claves que en `.env.example` (como mínimo `DATABASE_URL`, `ADMIN_API_TOKEN`, `ALLOW_DATA_RESET`; y AWS si los usas).
+5. **Deploy site**.
+
+Build en Netlify ejecuta: `yarn install`, `prisma generate`, `prisma db push` (crea tablas) y `next build`.
+
+**Nota:** `git push --force` no arregla errores de compilación en el servidor; solo reescribe historia en Git. Si el build falla, hay que ver el **log de build** (Netlify o Render) y corregir código o variables.
+
 ## Requisitos (Windows)
 
 - Node.js 20+ (recomendado 22+)

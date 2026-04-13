@@ -1,0 +1,13 @@
+# Monorepo: la app Next vive en nextjs_space/
+# En Netlify UI: conecta el repo https://github.com/universoledcode/alta
+# No hace falta tocar "base directory" si usas este archivo.
+
+[build]
+  base = "nextjs_space"
+  command = "yarn install && yarn prisma generate && yarn prisma db push && yarn build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

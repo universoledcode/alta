@@ -1,6 +1,7 @@
 generator client {
     provider = "prisma-client-js"
-    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    // debian-openssl-3.0.x = Linux x64 (Render, Netlify, Vercel). "native" = tu PC al generar.
+    binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
