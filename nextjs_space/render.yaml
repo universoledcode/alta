@@ -5,7 +5,7 @@ services:
     rootDir: nextjs_space
     plan: starter
     region: oregon
-    buildCommand: corepack yarn install && corepack yarn prisma db push && corepack yarn prisma generate && corepack yarn build
+    buildCommand: corepack yarn install && corepack yarn prisma generate && corepack yarn build
     startCommand: corepack yarn start
     healthCheckPath: /api/health
     autoDeploy: true

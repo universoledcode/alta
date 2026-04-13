@@ -32,7 +32,23 @@ Sin `DATABASE_URL`, Prisma falla en el build con **P1012** (exactamente el error
 3. Agrega variables de entorno (al menos `DATABASE_URL`; luego `ADMIN_API_TOKEN`, `ALLOW_DATA_RESET`, AWS si aplica).
 4. **Deploy site** o **Trigger deploy**.
 
-Build en Netlify ejecuta: `yarn install`, `prisma generate`, `prisma db push` (crea tablas) y `next build`.
+Build en Netlify ejecuta: `yarn install`, `prisma generate` y `next build`. **No** ejecutamos `prisma db push` en Netlify por defecto, porque muchas bases (como las de `hosteddb.*` con firewall) **rechazan conexiones desde los servidores de Netlify** y el build falla con **P1001**.
+
+### Si ves P1001 en Netlify (Can't reach database server)
+
+Eso no es un bug de Prisma en el código: tu base **no deja entrar** a la IP de Netlify (build ni funciones serverless).
+
+Opciones:
+
+1. **Recomendado para producción pública:** usar una PostgreSQL con acceso desde internet (Neon, Supabase, Railway, etc.) y poner esa `DATABASE_URL` en Netlify.
+2. **Seguir con tu base actual:** aplicar el esquema **solo desde tu PC** (donde sí conecta), una vez o cuando cambies el modelo:
+   ```powershell
+   cd nextjs_space
+   corepack yarn prisma db push
+   ```
+3. **Solo si tu proveedor permite IPs de Netlify:** en Netlify agrega variable `RUN_PRISMA_DB_PUSH` = `true` y abre el firewall a los rangos que indique Netlify; entonces el build volverá a intentar `db push`.
+
+**Importante:** si la base no acepta conexiones desde internet, **tampoco** funcionarán las rutas `/api/*` en el sitio publicado (subir Excel, KPIs, etc.), aunque el build pase. En ese caso la solución real es cambiar de base o abrir acceso controlado.
 
 **Nota:** `git push --force` no arregla errores de compilación en el servidor; solo reescribe historia en Git. Si el build falla, hay que ver el **log de build** (Netlify o Render) y corregir código o variables.
 

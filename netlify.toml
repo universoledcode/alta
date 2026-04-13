@@ -8,10 +8,16 @@
 # IMPORTANTE (plugin Next.js):
 # - En Build settings, deja "Publish directory" VACIO. Si pones "nextjs_space" ahi, rompe el deploy.
 #   El plugin @netlify/plugin-nextjs define la salida correcta.
+#
+# Prisma db push en el build:
+# - Muchas bases (ej. hosteddb / restringidas por IP) NO aceptan conexiones desde Netlify → P1001.
+# - Por defecto NO corremos db push en CI. Aplica el esquema desde tu PC: yarn prisma db push
+# - Opcional: si tu proveedor permite IPs de Netlify, variable RUN_PRISMA_DB_PUSH=true en Netlify
+#   y el comando de abajo ejecutara db push en el build.
 
 [build]
   base = "nextjs_space"
-  command = "yarn install && yarn prisma generate && yarn prisma db push && yarn build"
+  command = "yarn install && yarn prisma generate && if [ \"$RUN_PRISMA_DB_PUSH\" = \"true\" ]; then yarn prisma db push; fi && yarn build"
 
 [build.environment]
   NODE_VERSION = "20"
